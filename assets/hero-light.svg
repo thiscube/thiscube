@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 360" role="img" aria-labelledby="heroTitle">
+  <title id="heroTitle">thiscube</title>
+
+  <defs>
+    <style><![CDATA[
+      .display {
+        font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+        font-weight: 600;
+        font-size: 112px;
+        letter-spacing: -0.045em;
+        fill: #0c0a09;
+      }
+      .lead {
+        font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+        font-weight: 400;
+        font-size: 22px;
+        letter-spacing: -0.012em;
+        fill: #57534e;
+      }
+      .label {
+        font-family: ui-monospace, 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace;
+        font-weight: 500;
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        fill: #78716c;
+        font-variant-numeric: tabular-nums;
+      }
+      .label-dim {
+        font-family: ui-monospace, 'SF Mono', monospace;
+        font-weight: 400;
+        font-size: 11px;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        fill: #a8a29e;
+        font-variant-numeric: tabular-nums;
+      }
+      .rule { stroke: #e7e5e4; stroke-width: 1; shape-rendering: crispEdges; }
+
+      .dot {
+        fill: #65a30d;
+        transform-origin: center;
+        animation: pulse 2.6s ease-in-out infinite;
+      }
+      .halo {
+        fill: #65a30d;
+        opacity: 0;
+        transform-origin: center;
+        animation: halo 2.6s ease-out infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 1;    transform: scale(1);    }
+        50%      { opacity: 0.55; transform: scale(0.85); }
+      }
+      @keyframes halo {
+        0%   { opacity: 0.4; transform: scale(1); }
+        80%  { opacity: 0;   transform: scale(3.2); }
+        100% { opacity: 0;   transform: scale(3.2); }
+      }
+    ]]></style>
+
+    <pattern id="dots" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="0.8" fill="#d6d3d1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1280" height="360" fill="#fafaf9"/>
+  <rect width="1280" height="360" fill="url(#dots)" opacity="0.55"/>
+
+  <text x="80"   y="58" class="label-dim">01 — Profile</text>
+  <text x="1200" y="58" text-anchor="end" class="label">MMXXVI</text>
+  <line class="rule" x1="80" y1="80" x2="1200" y2="80"/>
+
+  <text x="80" y="216" class="display">thiscube</text>
+  <text x="80" y="258" class="lead">small, careful things for the web.</text>
+
+  <line class="rule" x1="80" y1="300" x2="1200" y2="300"/>
+  <text x="80" y="328" class="label-dim">Developer / Designer</text>
+
+  <g transform="translate(1200, 324)">
+    <text x="-22" y="4" text-anchor="end" class="label">Available</text>
+    <g transform="translate(-10, 0)">
+      <circle class="halo" cx="0" cy="0" r="4"/>
+      <circle class="dot"  cx="0" cy="0" r="3.5"/>
+    </g>
+  </g>
+</svg>

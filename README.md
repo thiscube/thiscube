@@ -1,5 +1,13 @@
 <div align="center">
-  <img src="./assets/hero.svg" alt="thiscube" />
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="./assets/hero.svg">
+    <source media="(prefers-color-scheme: light)" srcset="./assets/hero-light.svg">
+    <img src="./assets/hero.svg" alt="thiscube" />
+  </picture>
+</div>
+
+<div align="center">
+  <sub><!-- LAST_SHIPPED:START -->last shipped — initializing<!-- LAST_SHIPPED:END --></sub>
 </div>
 
 <br />

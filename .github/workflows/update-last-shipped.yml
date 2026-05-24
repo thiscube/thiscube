@@ -1,0 +1,84 @@
+name: Update last shipped
+
+on:
+  schedule:
+    - cron: '17 */4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute last shipped
+        id: shipped
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const events = await github.rest.activity.listPublicEventsForUser({
+              username: 'thiscube',
+              per_page: 50,
+            });
+            const push = events.data.find(
+              e => e.type === 'PushEvent' && e.payload.commits?.length
+            );
+            if (!push) {
+              core.setOutput('changed', 'false');
+              core.info('No recent push events found.');
+              return;
+            }
+            const commit = push.payload.commits[push.payload.commits.length - 1];
+            const repoName = push.repo.name;
+            const sha = commit.sha.slice(0, 7);
+            const created = new Date(push.created_at);
+            const diffMs = Date.now() - created.getTime();
+            const mins = Math.floor(diffMs / 60000);
+            let rel;
+            if (mins < 1)        rel = 'just now';
+            else if (mins < 60)  rel = `${mins}m ago`;
+            else if (mins < 1440) rel = `${Math.floor(mins / 60)}h ago`;
+            else                  rel = `${Math.floor(mins / 1440)}d ago`;
+            const url = `https://github.com/${repoName}/commit/${commit.sha}`;
+            const line = `last shipped — [\`${repoName}@${sha}\`](${url}) · ${rel}`;
+            core.setOutput('line', line);
+            core.setOutput('changed', 'true');
+
+      - name: Update README
+        if: steps.shipped.outputs.changed == 'true'
+        env:
+          LINE: ${{ steps.shipped.outputs.line }}
+        run: |
+          python3 <<'PY'
+          import os, re, pathlib
+          line = os.environ['LINE']
+          p = pathlib.Path('README.md')
+          content = p.read_text()
+          pattern = r'(<!-- LAST_SHIPPED:START -->).*?(<!-- LAST_SHIPPED:END -->)'
+          updated = re.sub(
+              pattern,
+              lambda m: f"{m.group(1)}{line}{m.group(2)}",
+              content,
+              flags=re.DOTALL,
+          )
+          if updated != content:
+              p.write_text(updated)
+              print('README updated.')
+          else:
+              print('No change.')
+          PY
+
+      - name: Commit & push
+        run: |
+          if [[ -n $(git status --porcelain README.md) ]]; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add README.md
+            git commit -m 'chore: refresh last-shipped marker'
+            git push
+          else
+            echo 'No changes to commit.'
+          fi
